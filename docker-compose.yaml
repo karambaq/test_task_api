@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: backend
+    restart: always
+    build:
+      context: ./enterprises
+      dockerfile: Dockerfile
+    # volumes:
+    #   - static:/var/html/static
+    #   - media:/code/media
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    restart: always
+    image: postgres:13
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx
+  #   build:
+  #     context: ./exchange_rate_react
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+  #   volumes:
+  #     - static:/var/html/static
+  #     - staticfiles:/var/html/staticfiles
+  #     - media:/var/html/media
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+
+
+
+volumes:
+  pgdata: # static:
